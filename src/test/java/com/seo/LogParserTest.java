@@ -49,6 +49,11 @@ public class LogParserTest extends PowerMockTestCase {
     }
 
 
+    /***
+     * Test with valid data and no nulls . this is positive case
+     * @throws URISyntaxException
+     * @throws IOException
+     */
     @Test
     public void processData() throws URISyntaxException, IOException {
         List<JsonData> data = getData();
@@ -80,6 +85,11 @@ public class LogParserTest extends PowerMockTestCase {
         Assert.assertTrue(Formatter.of("Map should have %% ", map.size()), map.size() == 4);
     }
 
+    /***
+     * Test to validate few null fileName log lines and it never breaks .
+     * @throws URISyntaxException
+     * @throws IOException
+     */
     @Test
     public void processDataWithNullFileName() throws URISyntaxException, IOException {
         List<JsonData> data = getBadData();
@@ -111,6 +121,11 @@ public class LogParserTest extends PowerMockTestCase {
         Assert.assertTrue(Formatter.of("Map should have size: %% with ext: %%  ", map.size(), map.size()), map.size() == 2);
     }
 
+    /***
+     * Test to validate 1 log line multiple times appear and it should return 1
+     * @throws URISyntaxException
+     * @throws IOException
+     */
     @Test
     public void processDataWithOneFileName() throws URISyntaxException, IOException {
         List<JsonData> data = getOneData();
@@ -142,6 +157,11 @@ public class LogParserTest extends PowerMockTestCase {
         Assert.assertTrue(Formatter.of("Map should have %%  ", map.size()), map.size() == 1);
     }
 
+    /***
+     * Test to check what if Log has all null file names and still code never breaks should return 0.
+     * @throws URISyntaxException
+     * @throws IOException
+     */
     @Test
     public void processDataWithallNullFileName() throws URISyntaxException, IOException {
         List<JsonData> data = getNullData();
@@ -171,6 +191,67 @@ public class LogParserTest extends PowerMockTestCase {
             System.out.println(((JsonData) v.stream().toArray()[0]).getNm().split("\\.")[1] + ":" + v.size());
         });
         Assert.assertTrue(Formatter.of("Map should have %%  ", map.size()), map.size() == 0);
+    }
+
+    /***
+     * Test to validate if IO exception is thrown due to file missing .
+     */
+    @Test
+    public void testFileNotFoundandThrowException() {
+
+        List<JsonData> data = getNullData();
+        Map<String, Set<JsonData>> map = new HashMap<>();
+        Mockito.when(logParser.getDataObjects()).thenReturn(data);
+        Path p = Mockito.mock(Path.class);
+        String url = Thread.currentThread().getContextClassLoader().getResource("json-test-data-one.txt").getPath();
+
+
+        try {
+
+            System.out.println(url);
+            PowerMockito.when(logParser, "readFile", url)
+                    .thenThrow(new IOException("I/O Exception"));
+
+        } catch (Exception e) {
+            org.testng.Assert.fail("I/O Exception");
+            e.printStackTrace();
+        }
+
+        Assert.assertTrue(Formatter.of("Map should have %%  ", map.size()), map.size() == 0);
+
+    }
+
+    /***
+     * Test to validate if readLines in the file null .
+     */
+    @Test
+    public void testValidateReadLinesNull() {
+
+        List<JsonData> data = getNullData();
+        Map<String, Set<JsonData>> map = new HashMap<>();
+        Mockito.when(logParser.getDataObjects()).thenThrow(new NullPointerException("No log lines"));
+        Path p = Mockito.mock(Path.class);
+        String url = Thread.currentThread().getContextClassLoader().getResource("json-test-data-one.txt").getPath();
+
+
+        try {
+
+            System.out.println(url);
+            PowerMockito.when(logParser, "readFile", url)
+                    .thenReturn(new ArrayList<>());
+
+        } catch (Exception e) {
+            org.testng.Assert.fail("I/O Exception");
+            e.printStackTrace();
+        }
+        try {
+            logParser.processFile(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Assert.assertTrue(Formatter.of("Map should have %%  ", map.size()), map.size() == 0);
+
     }
 
     private List<JsonData> getData() {

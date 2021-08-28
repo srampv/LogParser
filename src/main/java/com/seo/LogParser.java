@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,13 +15,25 @@ import java.util.stream.Collectors;
 
 public class LogParser {
 
-    List<JsonData> dataObjects = new ArrayList<>();
+    List<JsonData> dataObjects = null;
+
+    public LogParser() {
+        dataObjects = new ArrayList<>();
+    }
 
     public List<JsonData> getDataObjects() {
-        return dataObjects.stream().filter(e -> e.getPh() != null).collect(Collectors.toList());
+        // Filter all lines without path or file name null
+        if (dataObjects == null || dataObjects.size() == 0) {
+            return new ArrayList<>();
+        }
+        return dataObjects.stream().filter(e -> e.getPh() != null || e.getNm() != null).collect(Collectors.toList());
     }
 
     public void setDataObjects(List<JsonData> dataObjects) {
+        if (dataObjects == null) {
+            this.dataObjects = new ArrayList<>();
+            return;
+        }
         this.dataObjects = dataObjects;
     }
 
@@ -44,14 +57,23 @@ public class LogParser {
             dataObjects.add(mapper);
         }
         setDataObjects(dataObjects);
-        Map<String, Set<JsonData>> map = getDataObjects().stream().collect(Collectors.groupingBy(JsonData::getPh, Collectors.toSet()));
-        System.out.println(map);
-        return map;
+        try {
+            if (getDataObjects() != null) {
+
+
+                Map<String, Set<JsonData>> map = getDataObjects().stream().collect(Collectors.groupingBy(JsonData::getPh, Collectors.toSet()));
+                System.out.println(map);
+                return map;
+            }
+        } catch (Exception e) {
+
+        }
+        return new HashMap<>();
     }
 
     public List<String> readFile(String fileNameWithPath) throws IOException {
         List<String> lines = Files.readAllLines(Paths.get(fileNameWithPath));
-        return lines;
+        return lines == null ? new ArrayList<>() : lines;
     }
 }
 
