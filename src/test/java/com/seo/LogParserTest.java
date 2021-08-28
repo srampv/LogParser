@@ -142,6 +142,37 @@ public class LogParserTest extends PowerMockTestCase {
         Assert.assertTrue(Formatter.of("Map should have %%  ", map.size()), map.size() == 1);
     }
 
+    @Test
+    public void processDataWithallNullFileName() throws URISyntaxException, IOException {
+        List<JsonData> data = getNullData();
+        Map<String, Set<JsonData>> map = new HashMap<>();
+        Mockito.when(logParser.getDataObjects()).thenReturn(data);
+        Path p = Mockito.mock(Path.class);
+        String url = Thread.currentThread().getContextClassLoader().getResource("json-test-data-one.txt").getPath();
+
+        List<String> lines = new ArrayList<>() {{
+            add("{\"ts\":1551140352,\"pt\":55,\"si\":\"3380fb19-0bdb-46ab-8781-e4c5cd448074\",\"uu\":\"0dd24034-36d6-4b1e-a6c1-a52cc984f105\",\"bg\":\"77e28e28-745a-474b-a496-3c0e086eaec0\",\"sha\":\"abb3ec1b8174043d5cd21d21fbe3c3fb3e9a11c7ceff3314a3222404feedda52\",\"dp\":2}");
+            add("{\"ts\":1551140352,\"pt\":55,\"si\":\"3380fb19-0bdb-46ab-8781-e4c5cd448074\",\"uu\":\"0dd24034-36d6-4b1e-a6c1-a52cc984f105\",\"bg\":\"77e28e28-745a-474b-a496-3c0e086eaec0\",\"sha\":\"abb3ec1b8174043d5cd21d21fbe3c3fb3e9a11c7ceff3314a3222404feedda52\",\"dp\":2}");
+            add("{\"ts\":1551140352,\"pt\":55,\"si\":\"3380fb19-0bdb-46ab-8781-e4c5cd448074\",\"uu\":\"0dd24034-36d6-4b1e-a6c1-a52cc984f105\",\"bg\":\"77e28e28-745a-474b-a496-3c0e086eaec0\",\"sha\":\"abb3ec1b8174043d5cd21d21fbe3c3fb3e9a11c7ceff3314a3222404feedda52\",\"dp\":2}");
+            add("{\"ts\":1551140352,\"pt\":55,\"si\":\"3380fb19-0bdb-46ab-8781-e4c5cd448074\",\"uu\":\"0dd24034-36d6-4b1e-a6c1-a52cc984f105\",\"bg\":\"77e28e28-745a-474b-a496-3c0e086eaec0\",\"sha\":\"abb3ec1b8174043d5cd21d21fbe3c3fb3e9a11c7ceff3314a3222404feedda52\",\"dp\":2}");
+        }};
+
+        try {
+
+            System.out.println(url);
+            PowerMockito.when(logParser, "readFile", url)
+                    .thenReturn(lines);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        map = logParser.processFile(url);
+        map.forEach((u, v) -> {
+            System.out.println(((JsonData) v.stream().toArray()[0]).getNm().split("\\.")[1] + ":" + v.size());
+        });
+        Assert.assertTrue(Formatter.of("Map should have %%  ", map.size()), map.size() == 0);
+    }
+
     private List<JsonData> getData() {
         JsonData data1 = getObject("asdf.pdf", "/434/asdf.pdf");
         JsonData data2 = getObject("asdf.txt", "/errr/asdf.txt");
@@ -173,6 +204,19 @@ public class LogParserTest extends PowerMockTestCase {
         JsonData data2 = getObject("asdf.pdf", "/434/asdf.pdf");
         JsonData data3 = getObject("asdf.pdf", "/434/asdf.pdf");
         JsonData data4 = getObject("asdf.pdf", "/434/asdf.pdf");
+        List<JsonData> list = new ArrayList<>();
+        list.add(data1);
+        list.add(data2);
+        list.add(data3);
+        list.add(data4);
+        return list.stream().filter(e -> e.getPh() != null).collect(Collectors.toList());
+    }
+
+    private List<JsonData> getNullData() {
+        JsonData data1 = getObject(null, null);
+        JsonData data2 = getObject(null, null);
+        JsonData data3 = getObject(null, null);
+        JsonData data4 = getObject(null, null);
         List<JsonData> list = new ArrayList<>();
         list.add(data1);
         list.add(data2);
