@@ -1,0 +1,37 @@
+M/Users/aavsp/Downloads/LogParser/build/resources/test/json-test-data-bad.txt
+%77e28e28-745a-474b-a496-3c0e086eaec0
+null
+%77e28e28-745a-474b-a496-3c0e086eaec0
+null
+%77e28e28-745a-474b-a496-3c0e086eaec0
+/efvrfutgp/expgh/phkkrw
+%77e28e28-745a-474b-a496-3c0e086eaec0
+/efvrfutgp/expgh/phkkrw
+X{/errr/asdf.pdf=[com.seo.JsonData@50827080], /434/asdf.pdf=[com.seo.JsonData@de154baa]}
+csv:1
+pdf:1
+I/Users/aavsp/Downloads/LogParser/build/resources/test/json-test-data.txt
+%77e28e28-745a-474b-a496-3c0e086eaec0
+/efvrfutgp/expgh/phkkrw
+%77e28e28-745a-474b-a496-3c0e086eaec0
+/efvrfutgp/asdf.pdf
+%77e28e28-745a-474b-a496-3c0e086eaec0
+/efvrfutgp/expgh/phkkrw
+%77e28e28-745a-474b-a496-3c0e086eaec0
+/efvrfutgp/expgh/phkkrw
+±{/errr/asdf.txt=[com.seo.JsonData@508a4ed4], /errr/asdf.pdf=[com.seo.JsonData@50827080], /rerer/asdf.gif=[com.seo.JsonData@5d3b2c13], /434/asdf.pdf=[com.seo.JsonData@de154baa]}
+txt:1
+csv:1
+gif:1
+pdf:1
+M/Users/aavsp/Downloads/LogParser/build/resources/test/json-test-data-one.txt
+%77e28e28-745a-474b-a496-3c0e086eaec0
+/efvrfutgp/expgh/phkkrw
+%77e28e28-745a-474b-a496-3c0e086eaec0
+/efvrfutgp/expgh/phkkrw
+%77e28e28-745a-474b-a496-3c0e086eaec0
+/efvrfutgp/expgh/phkkrw
+%77e28e28-745a-474b-a496-3c0e086eaec0
+/efvrfutgp/expgh/phkkrw
+,{/434/asdf.pdf=[com.seo.JsonData@de154baa]}
+pdf:1
